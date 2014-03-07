@@ -4,7 +4,6 @@ def insert_max(heap, value):
     heap.append(value)
     heap_up(heap, len(heap) - 1)
 
-
 def delete_max(heap, idx):
     last = len(heap) - 1
     heap[idx] = heap[last]
@@ -16,18 +15,18 @@ def heap_down(heap, idx):
     
     child = -1
     # Havn't any child
-    if 2 * idx > n:
+    if 2 * idx > number:
         return
 
     # Have both left and right child
-    elif 2 * idx < n:
+    elif 2 * idx < number:
         left = 2 * idx
         right = 2 * idx + 1
         if heap[left] < heap[right]:
             child += right
 
     # Only have left child
-    elif 2 * idx == n:
+    elif 2 * idx == number:
         child = 2 * idx
 
     if heap[idx] < heap[child]:
@@ -57,6 +56,9 @@ def test_heap():
         insert_max(heap_value, item)
 
     print heap_value
+    delete_max(heap_value, 1)
+    print heap_value
+
 
 if __name__ == '__main__':
     test_heap()
