@@ -13,7 +13,7 @@ class Heap(object):
     def __init__(self, max_size=1000, compare=max_heap):
         super(Heap, self).__init__()
         self.max_size = max_size
-        self.compare = max_heap
+        self.compare = compare
         self.heap = ['#']
         self.cursor = 0
 
@@ -34,7 +34,8 @@ class Heap(object):
             parent = index // 2
             parent_value = self.heap[parent]
             index_value = self.heap[index]
-            if parent_value < index_value:
+            #if parent_value < index_value:
+            if self.compare(index_value, parent_value):
                 self.swap(parent, index)
                 self.heap_up(parent)
 
@@ -58,7 +59,8 @@ class Heap(object):
         elif 2 * index < number:
             left = 2 * index
             right = 2 * index + 1
-            if self.heap[left] < self.heap[right]:
+            # if self.heap[left] < self.heap[right]:
+            if self.compare(self.heap[right], self.heap[left]):
                 child = right
             else:
                 child = left
@@ -66,7 +68,8 @@ class Heap(object):
         elif 2 * index == number:
             child = 2 * index
 
-        if self.heap[index] < self.heap[child]:
+        # if self.heap[index] < self.heap[child]:
+        if self.compare(self.heap[child], self.heap[index]):
             #logging.warning("Before swap:" +  str(heap))
             #logging.warning("Swap: %d and %d" % (child, index))
             self.swap(child, index)
@@ -93,7 +96,7 @@ def test_heap():
 if __name__ == '__main__':
     #set_trace()
     #test_heap()
-    heap = Heap()    
+    heap = Heap(compare=min_heap)    
     insert_queue = [45, 36, 18, 53, 72, 30, 48, 93 ,15 ,35]
     for item in insert_queue:
         heap.insert(item)
