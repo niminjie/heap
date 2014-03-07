@@ -2,61 +2,76 @@ from ipdb import set_trace
 import logging
 
 
-def insert_max(heap, value):
-    if len(heap) <= 0:
-        heap.append(0)
-    heap.append(value)
-    heap_up(heap, len(heap) - 1)
+def max_heap(a, b):
+    return a > b
 
-def delete_max(heap, idx):
-    #set_trace()
-    logging.warning("Deleting a element index : %d, value: %d" % (idx, heap[idx]))
-    last = len(heap) - 1
-    heap[idx] = heap[last]
-    heap_down(heap, idx)
-    del heap[last]
+def min_heap(a, b):
+    return a < b
 
-def heap_down(heap, idx):
-    number = len(heap) - 2
-    logging.warning("Heap_down ,Index: %d, Number of tree: %d" % (idx, number))
-    child = -1
+class Heap(object):
+    """This is a heap"""
+    def __init__(self, max_size=1000, compare=max_heap):
+        super(Heap, self).__init__()
+        self.max_size = max_size
+        self.compare = max_heap
+        self.heap = ['#']
+        self.cursor = 0
 
-    # Havn't any child
-    if 2 * idx > number:
-        return
-    # Have both left and right child
-    elif 2 * idx < number:
-        left = 2 * idx
-        right = 2 * idx + 1
-        if heap[left] < heap[right]:
-            child = right
-        else:
-            child = left
-    # Only have left child
-    elif 2 * idx == number:
-        child = 2 * idx
+    def insert(self, value):
+        # if self.index <= 0:
+        #     self.heap.append('#')
+        self.heap.append(value)
+        self.cursor += 1
+        self.heap_up(self.cursor)
 
-    if heap[idx] < heap[child]:
-        logging.warning("Before swap:" +  str(heap))
-        logging.warning("Swap: %d and %d" % (child, idx))
-        swap(heap, child, idx)
-        logging.warning("After swap:" +  str(heap))
-        heap_down(heap, child)
+    def swap(self, a, b):
+        tmp = self.heap[a]
+        self.heap[a] = self.heap[b]
+        self.heap[b] = tmp
 
-def heap_up(heap, idx):
-    if idx > 1:
-        parent = idx / 2
-        parent_value = heap[parent]
-        idx_value = heap[idx]
+    def heap_up(self, index):
+        if index > 1:
+            parent = index // 2
+            parent_value = self.heap[parent]
+            index_value = self.heap[index]
+            if parent_value < index_value:
+                self.swap(parent, index)
+                self.heap_up(parent)
 
-        if parent_value < idx_value:
-            swap(heap, parent, idx)
-            heap_up(heap, parent)
+    def delete(self, index):
+        #set_trace()
+        #logging.warning("Deleting a element index : %d, value: %d" % (index, heap[index]))
+        self.heap[index] = self.heap[self.cursor]
+        self.heap_down(index)
+        del self.heap[self.cursor]
+        self.cursor -= 1
 
-def swap(heap, value1, value2):
-    tmp = heap[value1]
-    heap[value1] = heap[value2]
-    heap[value2] = tmp
+    def heap_down(self, index):
+        number = self.cursor
+        #logging.warning("Heap_down ,Index: %d, Number of tree: %d" % (index, number))
+        child = -1
+
+        # Havn't any child
+        if 2 * index > number:
+            return
+        # Have both left and right child
+        elif 2 * index < number:
+            left = 2 * index
+            right = 2 * index + 1
+            if self.heap[left] < self.heap[right]:
+                child = right
+            else:
+                child = left
+        # Only have left child
+        elif 2 * index == number:
+            child = 2 * index
+
+        if self.heap[index] < self.heap[child]:
+            #logging.warning("Before swap:" +  str(heap))
+            #logging.warning("Swap: %d and %d" % (child, index))
+            self.swap(child, index)
+            #logging.warning("After swap:" +  str(heap))
+            self.heap_down(child)
 
 def test_heap():
     insert_queue = [45, 36, 18, 53, 72, 30, 48, 93 ,15 ,35]
@@ -77,4 +92,13 @@ def test_heap():
 
 if __name__ == '__main__':
     #set_trace()
-    test_heap()
+    #test_heap()
+    heap = Heap()    
+    insert_queue = [45, 36, 18, 53, 72, 30, 48, 93 ,15 ,35]
+    for item in insert_queue:
+        heap.insert(item)
+    print heap.heap
+
+    for i in range(1, heap.cursor):
+        print heap.heap[1]
+        heap.delete(1)
