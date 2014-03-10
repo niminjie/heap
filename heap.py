@@ -1,4 +1,6 @@
 from ipdb import set_trace
+import random
+import time
 import logging
 
 
@@ -10,19 +12,33 @@ def min_heap(a, b):
 
 class Heap(object):
     """This is a heap"""
-    def __init__(self, max_size=1000, compare=max_heap):
+    def __init__(self, max_size=None, compare=max_heap):
         super(Heap, self).__init__()
         self.max_size = max_size
         self.compare = compare
         self.heap = ['#']
         self.cursor = 0
 
+    def get_top(self):
+        top = self.heap[1]
+        self.delete(1)
+        return top
+
     def insert(self, value):
-        # if self.index <= 0:
-        #     self.heap.append('#')
-        self.heap.append(value)
-        self.cursor += 1
-        self.heap_up(self.cursor)
+        if self.max_size == None:
+            self.heap.append(value)
+            self.cursor += 1
+            self.heap_up(self.cursor)
+        else:
+            if self.cursor < self.max_size:
+                self.heap.append(value)
+                self.cursor += 1
+                self.heap_up(self.cursor)
+            else:
+                if (not self.compare(value, self.heap[1])):
+					self.heap[1] = value
+					self.heap_down(1)
+
 
     def swap(self, a, b):
         tmp = self.heap[a]
@@ -96,12 +112,23 @@ def test_heap():
 if __name__ == '__main__':
     #set_trace()
     #test_heap()
-    heap = Heap(compare=min_heap)    
-    insert_queue = [45, 36, 18, 53, 72, 30, 48, 93 ,15 ,35]
+    #insert_queue = [45, 36, 18, 53, 72, 30, 48, 93 ,15 ,35]
+    insert_queue = []
+    for i in range(0, 1000000):
+        insert_queue.append(random.randint(1, 1000))
+    heap = Heap(max_size = 2000000,compare=max_heap)    
     for item in insert_queue:
         heap.insert(item)
-    print heap.heap
+    start = time.clock()
+    print "Delete a eme"
+    heap.delete(1)
+    end = time.clock()
+    print (end - start)
+    start = time.clock()
+    print max(insert_queue)
+    end = time.clock()
+    print (end - start)
+    #print heap.heap
 
-    for i in range(1, heap.cursor):
-        print heap.heap[1]
-        heap.delete(1)
+    #for i in range(1, heap.cursor):
+    #    print heap.get_top()
